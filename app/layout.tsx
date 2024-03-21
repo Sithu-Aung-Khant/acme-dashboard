@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <Providers>
-          <SignInBar />
-          {children}
-        </Providers>
+        {/* <Providers> */}
+        {/* <SignInBar /> */}
+        {children}
+        {/* </Providers> */}
         <Analytics />
       </body>
     </html>
