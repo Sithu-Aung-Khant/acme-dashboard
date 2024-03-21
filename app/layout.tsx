@@ -2,6 +2,8 @@ import { Analytics } from '@vercel/analytics/react';
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
+import SignInBar from './ui/forms/SignInBar';
+import Providers from './provider';
 
 export const metadata: Metadata = {
   title: 'Acme Dashboard',
@@ -17,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <Providers>
+          <SignInBar />
+          {children}
+        </Providers>
         <Analytics />
       </body>
     </html>

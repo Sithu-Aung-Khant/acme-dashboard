@@ -125,7 +125,7 @@ export async function deleteInvoice(id: string) {
   }
 }
 
-import { signIn } from '@/auth';
+import { signIn } from '@/auth-old';
 import { AuthError } from 'next-auth';
 
 export async function authenticate(
