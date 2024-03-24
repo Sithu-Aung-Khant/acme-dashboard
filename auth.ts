@@ -1,41 +1,79 @@
-import type { NextAuthConfig } from 'next-auth';
 import NextAuth from 'next-auth';
-import Google from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import { UserRole } from '@prisma/client';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 
-const credentialsConfig = CredentialsProvider({
-  name: 'Credentials',
-  credentials: {
-    username: {
-      label: 'User Name',
+import { db } from '@/app/lib/db';
+import authConfig from '@/auth.config';
+import { getUserById } from '@/app/lib/user';
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  callbacks: {
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role as UserRole;
+      }
+
+      return session;
     },
-    password: {
-      label: 'Password',
-      type: 'password',
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const existingUser = await getUserById(token.sub);
+
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
+
+      return token;
     },
   },
-  async authorize(credentials) {
-    if (credentials.username === 'sk' && credentials.password === '123')
-      return {
-        name: 'Valid',
-      };
-    else return null;
-  },
+  adapter: PrismaAdapter(db),
+  session: { strategy: 'jwt' },
+  ...authConfig,
 });
 
-const config = {
-  providers: [credentialsConfig, Google],
-  callbacks: {
-    authorized({ request, auth }) {
-      const { pathname } = request.nextUrl;
-      if (pathname.startsWith('/dashboard/')) return !!auth;
-      return true;
-    },
-    // jwt({ token, trigger, session }) {
-    //   if (trigger === 'update') token.name = session.user.name;
-    //   return token;
-    // },
-  },
-} satisfies NextAuthConfig;
+// import type { NextAuthConfig } from 'next-auth';
+// import NextAuth from 'next-auth';
+// import Google from 'next-auth/providers/google';
+// import CredentialsProvider from 'next-auth/providers/credentials';
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+// const credentialsConfig = CredentialsProvider({
+//   name: 'Credentials',
+//   credentials: {
+//     username: {
+//       label: 'User Name',
+//     },
+//     password: {
+//       label: 'Password',
+//       type: 'password',
+//     },
+//   },
+//   async authorize(credentials) {
+//     if (credentials.username === 'sk' && credentials.password === '123')
+//       return {
+//         name: 'Valid',
+//       };
+//     else return null;
+//   },
+// });
+
+// const config = {
+//   providers: [credentialsConfig, Google],
+//   callbacks: {
+//     authorized({ request, auth }) {
+//       const { pathname } = request.nextUrl;
+//       if (pathname.startsWith('/dashboard/')) return !!auth;
+//       return true;
+//     },
+//     // jwt({ token, trigger, session }) {
+//     //   if (trigger === 'update') token.name = session.user.name;
+//     //   return token;
+//     // },
+//   },
+// } satisfies NextAuthConfig;
+
+// export const { handlers, auth, signIn, signOut } = NextAuth(config);
