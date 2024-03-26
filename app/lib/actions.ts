@@ -27,6 +27,8 @@ export type State = {
     customerId?: string[];
     amount?: string[];
     status?: string[];
+    name?: string[];
+    email?: string[];
   };
   message?: string | null;
 };
@@ -123,4 +125,47 @@ export async function deleteInvoice(id: string) {
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Invoice.' };
   }
+}
+
+// Form Schema for Customer Creation
+const CustomerFormSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+});
+
+// CREATE CUSTOMER
+export async function createCustomer(prevState: State, formData: FormData) {
+  // Validate form fields using Zod
+  const validatedFields = CustomerFormSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+  });
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message:
+        'Failed to create customer. Please provide valid name and email.',
+    };
+  }
+
+  // Prepare data for insertion into the database
+  const { name, email } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
+  console.log(name, email);
+
+  // Insert data into the Database
+  try {
+    await sql`
+    INSERT INTO customers (name, email, date)
+    VALUES (${name}, ${email}, ${date})`;
+    // console.log('data inserted');
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Create Customer.',
+    };
+  }
+  // Revalidate the cache for the customers page and redirect the user.
+  revalidatePath('/dashboard/customers');
+  redirect('/dashboard/customers');
 }
