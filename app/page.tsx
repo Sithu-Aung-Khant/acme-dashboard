@@ -2,6 +2,8 @@ import AcmeLogo from '@/app/ui/acme-logo';
 import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
 import LoginButton from './ui/auth/login-button';
+import desktop from '@/public/images/desktop.png';
+import mobile from '@/public/images/mobile.png';
 
 export default function Page() {
   return (
@@ -23,7 +25,7 @@ export default function Page() {
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
           {/* Add Hero Images Here */}
           <Image
-            src="/images/desktop.png"
+            src={desktop}
             width={1000}
             height={760}
             priority={true}
@@ -31,7 +33,7 @@ export default function Page() {
             alt="Screenshots of the dashboard project showing desktop version"
           ></Image>
           <Image
-            src="/images/mobile.png"
+            src={mobile}
             width={560}
             height={620}
             priority={true}
