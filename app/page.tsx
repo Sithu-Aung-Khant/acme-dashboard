@@ -26,6 +26,7 @@ export default function Page() {
             src="/hero-desktop.png"
             width={1000}
             height={760}
+            priority={true}
             className="hidden md:block"
             alt="Screenshots of the dashboard project showing desktop version"
           ></Image>
@@ -33,6 +34,7 @@ export default function Page() {
             src="/hero-mobile.png"
             width={560}
             height={620}
+            priority={true}
             className="block md:hidden"
             alt="Screenshots of the dashboard project showing mobile version"
           ></Image>
