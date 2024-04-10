@@ -5,7 +5,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="absolute right-10 top-5 bg-slate-50">
-        <UserButton />
+        {/* <UserButton /> */}
       </div>
       <div className="w-full flex-none md:w-64">
         <SideNav />

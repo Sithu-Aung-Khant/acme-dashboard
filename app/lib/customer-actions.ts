@@ -21,6 +21,8 @@ export async function createCustomer(formData: FormData) {
     image_url: formData.get('image_url') || '/customers/emil-kowalski.png',
   });
 
+  console.log(validatedFields);
+
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
