@@ -126,3 +126,15 @@ export async function deleteInvoice(id: string) {
     return { message: 'Database Error: Failed to Delete Invoice.' };
   }
 }
+
+// DELETE CUSTOMER
+export async function deleteCustomer(id: string) {
+  // throw new Error('Failed to Delete Invoice');
+  try {
+    await sql`DELETE FROM customers WHERE id = ${id}`;
+    revalidatePath('/dashboard/customers');
+    return { message: 'Deleted Customer' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Customer.' };
+  }
+}

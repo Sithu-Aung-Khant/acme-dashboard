@@ -5,7 +5,7 @@ import {
   CustomersTableType,
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
-import { CreateCustomer } from '../invoices/buttons';
+import { CreateCustomer, DeleteCustomer } from '../invoices/buttons';
 
 export default async function CustomersTable({
   customers,
@@ -63,6 +63,7 @@ export default async function CustomersTable({
                     <div className="pt-4 text-sm">
                       <p>{customer.total_invoices} invoices</p>
                     </div>
+                    <DeleteCustomer id={customer.id} />
                   </div>
                 ))}
               </div>
@@ -113,6 +114,9 @@ export default async function CustomersTable({
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {customer.total_paid}
+                      </td>
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
+                        <DeleteCustomer id={customer.id} />
                       </td>
                     </tr>
                   ))}
