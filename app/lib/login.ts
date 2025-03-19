@@ -16,6 +16,18 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password } = validatedFields.data;
 
+  // Add password strength validation
+  if (
+    password.length < 8 ||
+    !/[A-Z]/.test(password) ||
+    !/[0-9]/.test(password)
+  ) {
+    return {
+      error:
+        'Password must be at least 8 characters with at least one uppercase letter and one number',
+    };
+  }
+
   try {
     await signIn('credentials', {
       email,
